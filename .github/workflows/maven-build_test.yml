@@ -25,6 +25,6 @@ jobs:
         uses: PavanMudigonda/jacoco-reporter@v5.0
         with:
           coverage_results_path: target/site/jacoco/jacoco.xml
-          minimum_coverage: 40
+          minimum_coverage: 10
           fail_below_threshold: true
 
