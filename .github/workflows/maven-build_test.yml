@@ -21,3 +21,10 @@ jobs:
           cache: maven
       - name: Build and test with Maven
         run: mvn --batch-mode package
+      - name: jacoco-reporter
+        uses: PavanMudigonda/jacoco-reporter@v5.0
+        with:
+          coverage_results_path: target/site/jacoco/jacoco.xml
+          minimum_coverage: 40
+          fail_below_threshold: true
+
