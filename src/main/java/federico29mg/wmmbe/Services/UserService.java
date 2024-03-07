@@ -34,7 +34,7 @@ public class UserService {
         User user = userRepository.save(userMapper.newUserRequestToUser(newUserRequest));
         return userMapper.userToNewUserResponse(user);
     }
-    public void deleteAccount(UUID uuid) {
+    public void deleteUser(UUID uuid) {
         userRepository.delete(findUserById(uuid));
     }
 
