@@ -1,8 +1,6 @@
 package federico29mg.wmmbe.DTOs.ReceiptDTOs;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -10,6 +8,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class NewReceiptResponse {
     private UUID id;
     private UUID user_id;
