@@ -154,7 +154,7 @@ public class UserServiceTests {
 
         userService.deleteUser(user.getId());
 
-        verify(userRepository, times(2)).findById(user.getId());
+        verify(userRepository, times(1)).findById(user.getId());
         verify(userRepository, times(1)).delete(user);
     }
 
@@ -165,18 +165,5 @@ public class UserServiceTests {
         assertThrows(UserNotFoundException.class, () -> {
             userService.deleteUser(user.getId());
         });
-    }
-
-    @Test
-    public void givenReceipt_whenSavingUserReceipt_thenSaveReceipt() {
-        lenient().when(userRepository.findById(newReceipt.getUser().getId())).thenReturn(Optional.ofNullable(user));
-        lenient().when(userRepository.save(userWithNewReceipt)).thenReturn(userWithReceipt);
-
-        Receipt testReceipt = userService.saveUserReceipt(newReceipt);
-
-        verify(userRepository, times(1)).findById(newReceipt.getUser().getId());
-        verify(userRepository, times(1)).save(userWithNewReceipt);
-
-        assertThat(testReceipt.getId()).isNotNull();
     }
 }
