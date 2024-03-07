@@ -26,6 +26,6 @@ public class UserController {
     @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@NotNull @PathVariable UUID uuid) {
-        userService.deleteAccount(uuid);
+        userService.deleteUser(uuid);
     }
 }
