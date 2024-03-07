@@ -91,6 +91,16 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.11</version>
+                <configuration>
+                    <excludes>
+                        <exclude>federico29mg/wmmbe/Advices/**/*</exclude>
+                        <exclude>federico29mg/wmmbe/DTOs/**/*</exclude>
+                        <exclude>federico29mg/wmmbe/Entities/**/*</exclude>
+                        <exclude>federico29mg/wmmbe/Exceptions/**/*</exclude>
+                        <exclude>federico29mg/wmmbe/Mappers/**/*</exclude>
+                        <exclude>federico29mg/wmmbe/Utils/**/*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
