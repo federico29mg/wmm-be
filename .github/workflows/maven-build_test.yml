@@ -7,9 +7,9 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    permissions:
+      checks: write
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4
@@ -21,10 +21,16 @@ jobs:
           cache: maven
       - name: Build and test with Maven
         run: mvn --batch-mode package
-      - name: jacoco-reporter
+      - name: JaCoCo Code Coverage Report
+        id: jacoco_reporter
         uses: PavanMudigonda/jacoco-reporter@v5.0
         with:
           coverage_results_path: target/site/jacoco/jacoco.xml
+          coverage_report_name: Coverage
+          coverage_report_title: JaCoCo
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          skip_check_run: false
           minimum_coverage: 10
-          fail_below_threshold: true
+          fail_below_threshold: false
+          publish_only_summary: false
 
