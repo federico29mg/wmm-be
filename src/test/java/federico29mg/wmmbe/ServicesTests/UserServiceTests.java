@@ -154,7 +154,7 @@ public class UserServiceTests {
 
         userService.deleteUser(user.getId());
 
-        verify(userRepository, times(1)).findById(user.getId());
+        verify(userRepository, times(2)).findById(user.getId());
         verify(userRepository, times(1)).delete(user);
     }
 
