@@ -11,9 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NewReceiptRequest {
-    private UUID user_id;
-
+public class PatchReceiptRequest {
     @NotEmpty(message = "Place is mandatory")
     private String place;
 

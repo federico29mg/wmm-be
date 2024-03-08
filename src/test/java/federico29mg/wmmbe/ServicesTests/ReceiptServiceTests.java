@@ -1,12 +1,11 @@
 package federico29mg.wmmbe.ServicesTests;
 
 import federico29mg.wmmbe.DTOs.ReceiptDTOs.NewReceiptRequest;
-import federico29mg.wmmbe.DTOs.ReceiptDTOs.NewReceiptResponse;
+import federico29mg.wmmbe.DTOs.ReceiptDTOs.ReceiptResponse;
 import federico29mg.wmmbe.DTOs.ReceiptDTOs.ReceiptStats;
 import federico29mg.wmmbe.Entities.Receipt;
 import federico29mg.wmmbe.Entities.User;
 import federico29mg.wmmbe.Exceptions.ReceiptExceptions.ReceiptNotFoundException;
-import federico29mg.wmmbe.Exceptions.UserExceptions.UsernameAlreadyExistsException;
 import federico29mg.wmmbe.Mappers.ReceiptMapper;
 import federico29mg.wmmbe.Repositories.ReceiptRepository;
 import federico29mg.wmmbe.Services.ReceiptService;
@@ -41,7 +40,7 @@ public class ReceiptServiceTests {
     private NewReceiptRequest newReceiptRequest;
     private Receipt newReceipt;
     private Receipt receipt;
-    private NewReceiptResponse newReceiptResponse;
+    private ReceiptResponse receiptResponse;
 
     @BeforeEach
     public void setUp() {
@@ -68,7 +67,7 @@ public class ReceiptServiceTests {
                 .cost(50000.0)
                 .build();
 
-        newReceiptResponse = NewReceiptResponse.builder()
+        receiptResponse = ReceiptResponse.builder()
                 .id(receipt.getId())
                 .user_id(receipt.getUser().getId())
                 .date(receipt.getDate())
@@ -82,15 +81,15 @@ public class ReceiptServiceTests {
     public void givenNewReceiptRequest_whenSavingNewReceipt_thenReturnNewReceiptResponse() {
         when(receiptMapper.newReceiptRequestToReceipt(newReceiptRequest)).thenReturn(newReceipt);
         when(userService.saveUserReceipt(newReceipt)).thenReturn(receipt);
-        when(receiptMapper.receiptToNewReceiptResponse(receipt)).thenReturn(newReceiptResponse);
+        when(receiptMapper.receiptToReceiptResponse(receipt)).thenReturn(receiptResponse);
 
-        NewReceiptResponse testNewReceiptResponse = receiptService.postReceipt(newReceiptRequest);
+        ReceiptResponse testReceiptResponse = receiptService.postReceipt(newReceiptRequest);
 
         verify(receiptMapper, times(1)).newReceiptRequestToReceipt(newReceiptRequest);
         verify(userService, times(1)).saveUserReceipt(newReceipt);
-        verify(receiptMapper, times(1)).receiptToNewReceiptResponse(receipt);
+        verify(receiptMapper, times(1)).receiptToReceiptResponse(receipt);
 
-        assertThat(testNewReceiptResponse.getId()).isNotNull();
+        assertThat(testReceiptResponse.getId()).isNotNull();
     }
 
     @Test

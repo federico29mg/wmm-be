@@ -10,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NewReceiptResponse {
+public class ReceiptResponse {
     private UUID id;
     private UUID user_id;
     private LocalDate date;
