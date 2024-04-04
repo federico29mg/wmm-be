@@ -31,13 +31,3 @@ jobs:
           minimum_coverage: 10
           fail_below_threshold: true
           publish_only_summary: false
-      - name: Login to Azure Registry
-        uses: azure/docker-login@v1
-        with:
-          login-server: wwebe.azurecr.io
-          username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
-          password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
-      - name: Push to Azure Registry
-        run: |
-          docker build . -t wwebe.azurecr.io/wwebe:latest
-          docker push wwebe.azurecr.io/wwebe:latest
