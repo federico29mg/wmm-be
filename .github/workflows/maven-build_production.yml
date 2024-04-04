@@ -40,24 +40,30 @@ jobs:
           fail_below_threshold: true
           publish_only_summary: false
 
-      - name: Login and push to Test Azure Registry
+      - name: Login to Test Azure Registry
         if: ${{ env.DESIRED_ENVIRONMENT == env.TEST_ENVIRONMENT }}
         uses: azure/docker-login@v1
         with:
           login-server: test2dv.azurecr.io
           username: ${{ secrets.TEST_USERNAME }}
           password: ${{ secrets.TEST_PASSWORD }}
+
+      - name: Push to Test Azure Registry
+        if: ${{ env.DESIRED_ENVIRONMENT == env.TEST_ENVIRONMENT }}
         run: |
           docker build . -t test2dv.azurecr.io/test:latest
           docker push test2dv.azurecr.io/test:latest
 
-      - name: Login and push to Production Azure Registry
+      - name: Login to Production Azure Registry
         if: ${{ env.DESIRED_ENVIRONMENT == env.PRODUCTION_ENVIRONMENT }}
         uses: azure/docker-login@v1
         with:
           login-server: production2dv.azurecr.io
           username: ${{ secrets.PRODUCTION_USERNAME }}
           password: ${{ secrets.PRODUCTION_PASSWORD }}
+
+      - name: Push to Production Azure Registry
+        if: ${{ env.DESIRED_ENVIRONMENT == env.PRODUCTION_ENVIRONMENT }}
         run: |
           docker build . -t production2dv.azurecr.io/prod:latest
           docker push production2dv.azurecr.io/prod:latest
