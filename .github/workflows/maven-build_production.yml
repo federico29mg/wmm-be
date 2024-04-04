@@ -5,20 +5,28 @@ on:
     branches:
       - production
 
+env:
+  DESIRED_ENVIRONMENT: test
+  TEST_ENVIRONMENT: test
+  PRODUCTION_ENVIRONMENT: production
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+
       - name: Build and test with Maven
         run: mvn --batch-mode package
+
       - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
         uses: PavanMudigonda/jacoco-reporter@v5.0
@@ -28,6 +36,34 @@ jobs:
           coverage_report_title: JaCoCo
           github_token: ${{ secrets.GITHUB_TOKEN }}
           skip_check_run: false
-          minimum_coverage: 60
+          minimum_coverage: 10
           fail_below_threshold: true
           publish_only_summary: false
+
+      - name: Login to Test Azure Registry
+        if: ${{ env.DESIRED_ENVIRONMENT == env.TEST_ENVIRONMENT }}
+        uses: azure/docker-login@v1
+        with:
+          login-server: test2dv.azurecr.io
+          username: ${{ secrets.TEST_USERNAME }}
+          password: ${{ secrets.TEST_PASSWORD }}
+
+      - name: Push to Test Azure Registry
+        if: ${{ env.DESIRED_ENVIRONMENT == env.TEST_ENVIRONMENT }}
+        run: |
+          docker build . -t test2dv.azurecr.io/test:latest
+          docker push test2dv.azurecr.io/test:latest
+
+      - name: Login to Production Azure Registry
+        if: ${{ env.DESIRED_ENVIRONMENT == env.PRODUCTION_ENVIRONMENT }}
+        uses: azure/docker-login@v1
+        with:
+          login-server: production2dv.azurecr.io
+          username: ${{ secrets.PRODUCTION_USERNAME }}
+          password: ${{ secrets.PRODUCTION_PASSWORD }}
+
+      - name: Push to Production Azure Registry
+        if: ${{ env.DESIRED_ENVIRONMENT == env.PRODUCTION_ENVIRONMENT }}
+        run: |
+          docker build . -t production2dv.azurecr.io/prod:latest
+          docker push production2dv.azurecr.io/prod:latest

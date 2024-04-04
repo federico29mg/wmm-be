@@ -1,7 +1,7 @@
 package federico29mg.wmmbe.Services;
 
+import federico29mg.wmmbe.DTOs.UserDTOs.UserResponse;
 import federico29mg.wmmbe.DTOs.UserDTOs.NewUserRequest;
-import federico29mg.wmmbe.DTOs.UserDTOs.NewUserResponse;
 import federico29mg.wmmbe.Entities.Receipt;
 import federico29mg.wmmbe.Entities.User;
 import federico29mg.wmmbe.Exceptions.UserExceptions.EmailAlreadyExistsException;
@@ -11,6 +11,7 @@ import federico29mg.wmmbe.Mappers.UserMapper;
 import federico29mg.wmmbe.Repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -24,7 +25,7 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public NewUserResponse postUser(NewUserRequest newUserRequest) {
+    public UserResponse postUser(NewUserRequest newUserRequest) {
         if(userRepository.findByUsernameIs(newUserRequest.getUsername()).isPresent()) {
             throw new UsernameAlreadyExistsException("Username " + newUserRequest.getUsername() + " is already in use");
         }
@@ -32,8 +33,31 @@ public class UserService {
             throw new EmailAlreadyExistsException("Email " + newUserRequest.getEmail() + " is already in use");
         }
         User user = userRepository.save(userMapper.newUserRequestToUser(newUserRequest));
-        return userMapper.userToNewUserResponse(user);
+        return userMapper.userToUserResponse(user);
     }
+
+    public List<UserResponse> getAllUsers() {
+        return userMapper.userListToUserResponseList(userRepository.findAll());
+    }
+
+    public UserResponse getUser(UUID uuid) {
+        return userMapper.userToUserResponse(findUserById(uuid));
+    }
+
+    public UserResponse patchUsername(UUID uuid, String username) {
+        User user = findUserById(uuid);
+
+        if(!user.getUsername().equals(username)) {
+            if(userRepository.findByUsernameIs(username).isPresent()) {
+                throw new UsernameAlreadyExistsException("Username " + username + " is already in use");
+            }
+            user.setUsername(username);
+            user = userRepository.save(user);
+        }
+
+        return userMapper.userToUserResponse(user);
+    }
+
     public void deleteUser(UUID uuid) {
         userRepository.delete(findUserById(uuid));
     }

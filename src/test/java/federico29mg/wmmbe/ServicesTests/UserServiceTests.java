@@ -1,7 +1,7 @@
 package federico29mg.wmmbe.ServicesTests;
 
 import federico29mg.wmmbe.DTOs.UserDTOs.NewUserRequest;
-import federico29mg.wmmbe.DTOs.UserDTOs.NewUserResponse;
+import federico29mg.wmmbe.DTOs.UserDTOs.UserResponse;
 import federico29mg.wmmbe.Entities.Receipt;
 import federico29mg.wmmbe.Entities.User;
 import federico29mg.wmmbe.Exceptions.UserExceptions.EmailAlreadyExistsException;
@@ -39,11 +39,7 @@ public class UserServiceTests {
     private NewUserRequest newUserRequest;
     private User newUser;
     private User user;
-    private User userWithNewReceipt;
-    private User userWithReceipt;
-    private NewUserResponse newUserResponse;
-    private Receipt newReceipt;
-    private Receipt receipt;
+    private UserResponse userResponse;
 
     @BeforeEach
     public void setUp() {
@@ -69,43 +65,10 @@ public class UserServiceTests {
                 .receipts(receipts)
                 .build();
 
-        newUserResponse = NewUserResponse.builder()
+        userResponse = UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .build();
-
-        newReceipt = Receipt.builder()
-                .user(User.builder().id(user.getId()).build())
-                .date(LocalDate.now())
-                .place("C&W")
-                .detail("Dinner with friends")
-                .cost(50000.00)
-                .build();
-
-        receipt = Receipt.builder()
-                .id(UUID.randomUUID())
-                .user(user)
-                .date(newReceipt.getDate())
-                .place(newReceipt.getPlace())
-                .detail(newReceipt.getDetail())
-                .cost(newReceipt.getCost())
-                .build();
-
-        userWithNewReceipt = User.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .receipts(Set.of(newReceipt))
-                .build();
-
-        userWithReceipt = User.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .receipts(Set.of(receipt))
                 .build();
     }
 
@@ -115,17 +78,17 @@ public class UserServiceTests {
         when(userRepository.findByEmailIs(newUserRequest.getEmail())).thenReturn(Optional.empty());
         when(userMapper.newUserRequestToUser(newUserRequest)).thenReturn(newUser);
         when(userRepository.save(newUser)).thenReturn(user);
-        when(userMapper.userToNewUserResponse(user)).thenReturn(newUserResponse);
+        when(userMapper.userToUserResponse(user)).thenReturn(userResponse);
 
-        NewUserResponse testNewUserResponse = userService.postUser(newUserRequest);
+        UserResponse testUserResponse = userService.postUser(newUserRequest);
 
         verify(userRepository, times(1)).findByUsernameIs(newUserRequest.getUsername());
         verify(userRepository, times(1)).findByEmailIs(newUserRequest.getEmail());
         verify(userMapper, times(1)).newUserRequestToUser(newUserRequest);
         verify(userRepository, times(1)).save(newUser);
-        verify(userMapper, times(1)).userToNewUserResponse(user);
+        verify(userMapper, times(1)).userToUserResponse(user);
 
-        assertThat(testNewUserResponse).isNotNull();
+        assertThat(testUserResponse).isNotNull();
     }
 
     @Test
