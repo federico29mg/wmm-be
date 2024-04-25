@@ -1,14 +1,6 @@
 spring:
   jpa:
-    database: POSTGRESQL
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-  datasource:
-    url: jdbc:postgresql://isabelle.db.elephantsql.com:5432/wcqplglu
-    username: wcqplglu
-    password: JPTcFXWOZaqo8mzGINUHZcBtHx6z2_0l
-    driver-class-name: org.postgresql.Driver
+    generate-ddl: true
 logging:
   level:
     org:
